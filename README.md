@@ -1,8 +1,6 @@
 # MCP_Voice
 MCP starter - voice and chat functionality with MCP boiler-plate potential
 {
-  `path`: `C:\\Users\\Josh\\Desktop\\MCP_Assistant\\MCP_Voice\\README.md`,
-  `content`: `# MCP_Voice
 
 MCP starter project with voice and chat functionality, featuring AI tool calling capabilities. Includes weather queries, mathematical calculations, and voice responses.
 
