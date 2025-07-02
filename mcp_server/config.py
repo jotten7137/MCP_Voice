@@ -42,7 +42,7 @@ try:
         ENABLED_TOOLS: list = ["weather", "calculator"]
         
         # Individual tool configs (loaded from env)
-        WEATHER_API_KEY: str = os.getenv("WEATHER_API_KEY", "a32388aba00ba920e2abf48418dc2995")
+        WEATHER_API_KEY: str = os.getenv("WEATHER_API_KEY", "")
         WEATHER_DEFAULT_LOCATION: str = "San Francisco"
         
         @property
@@ -94,7 +94,7 @@ except ImportError:
         ENABLED_TOOLS: List[str] = ["weather", "calculator"]
         TOOL_CONFIGS: Dict[str, Dict[str, Any]] = {
             "weather": {
-                "api_key": os.getenv("WEATHER_API_KEY", "a32388aba00ba920e2abf48418dc2995"),
+                "api_key": os.getenv("WEATHER_API_KEY", ""),
                 "default_location": "San Francisco"
             },
             "calculator": {}
