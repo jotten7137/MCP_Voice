@@ -1,0 +1,11 @@
+# Minimal requirements - no version conflicts
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+python-multipart
+aiohttp
+gtts
+numpy
+python-dotenv
+sympy

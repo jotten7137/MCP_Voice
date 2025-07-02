@@ -103,6 +103,25 @@ async def chat_endpoint(request: ChatRequest, token: str = Depends(verify_token)
     
     # Check if LLM wants to call any tools
     tool_calls = router.extract_tool_calls(response)
+    logger.info(f"Extracted tool calls: {tool_calls}")
+    
+    # If tools were called, process them and regenerate response
+    if tool_calls:
+        logger.info(f"Processing {len(tool_calls)} tool calls")
+        new_tool_results = await router.process_tool_calls(tool_calls)
+        logger.info(f"Tool execution results: {new_tool_results}")
+        
+        # Generate a follow-up response with tool results
+        follow_up_response = await llm_service.generate_response(
+            message=request.message,
+            session_id=session_id,
+            tool_results=new_tool_results
+        )
+        logger.info(f"Follow-up response: {follow_up_response['message'][:100]}")
+        
+        # Use the follow-up response as the main response
+        response = follow_up_response
+        tool_calls = []  # Clear since we've processed them
     
     # Generate audio if needed
     audio_response_id = None

@@ -183,6 +183,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Add assistant message to chat
                 addMessageToChat('assistant', response.message);
                 
+                // Handle tool calls if present (these would be future tool calls that weren't processed yet)
+                if (response.tool_calls && response.tool_calls.length > 0) {
+                    console.log('Tool calls detected:', response.tool_calls);
+                    
+                    // Add tool call indicator to the chat
+                    for (const toolCall of response.tool_calls) {
+                        addToolCallToChat(toolCall);
+                    }
+                }
+                
                 // Handle audio response if available
                 if (response.audio_response_id) {
                     playAudioResponse(response.audio_response_id);
@@ -258,6 +268,32 @@ document.addEventListener('DOMContentLoaded', function() {
         chatMessages.appendChild(messageDiv);
         
         // Scroll to bottom
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    function addToolCallToChat(toolCall) {
+        const toolDiv = document.createElement('div');
+        toolDiv.className = 'tool-call';
+        toolDiv.style.cssText = `
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+        `;
+        
+        toolDiv.innerHTML = `
+            <div style="color: #007bff; font-weight: bold; margin-bottom: 5px;">
+                🔧 Tool Call: ${toolCall.tool_name}
+            </div>
+            <div style="color: #666;">
+                Parameters: ${JSON.stringify(toolCall.parameters, null, 2)}
+            </div>
+        `;
+        
+        chatMessages.appendChild(toolDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
     

@@ -70,22 +70,32 @@ class RequestRouter:
         # Method 2: Parse from message text using regex patterns
         # This is a fallback for LLMs that don't have structured tool calling
         message = llm_response.get("message", "")
+        if not message:
+            # Try alternate keys
+            message = llm_response.get("raw_response", "")
+        
+        logger.info(f"Extracting tool calls from message: {message[:200]}...")
         
         # Look for patterns like: @tool_name({"param": "value"})
-        tool_call_pattern = r'@(\w+)\(({.*?})\)'
-        matches = re.findall(tool_call_pattern, message)
+        # Make the pattern more flexible to handle variations
+        tool_call_pattern = r'@(\w+)\s*\(\s*({[^}]*})\s*\)'
+        matches = re.findall(tool_call_pattern, message, re.DOTALL)
         
         tool_calls = []
         for tool_name, params_str in matches:
             try:
+                # Clean up the JSON string
+                params_str = params_str.strip()
                 params = json.loads(params_str)
                 tool_calls.append({
                     "tool_name": tool_name,
                     "parameters": params
                 })
-            except json.JSONDecodeError:
-                logger.warning(f"Failed to parse tool call parameters: {params_str}")
+                logger.info(f"Successfully extracted tool call: {tool_name} with params {params}")
+            except json.JSONDecodeError as e:
+                logger.warning(f"Failed to parse tool call parameters: {params_str}, error: {e}")
         
+        logger.info(f"Total tool calls extracted: {len(tool_calls)}")
         return tool_calls
     
     async def process_tool_calls(self, tool_calls: List[Dict[str, Any]]) -> List[Dict[str, Any]]:

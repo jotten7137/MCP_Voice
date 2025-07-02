@@ -16,6 +16,12 @@ class WeatherTool(BaseTool):
         )
         self.api_key = settings.TOOL_CONFIGS["weather"]["api_key"]
         self.default_location = settings.TOOL_CONFIGS["weather"]["default_location"]
+        
+        # Check if API key is valid
+        if not self.api_key or self.api_key == "your-api-key-here":
+            import logging
+            logger = logging.getLogger("mcp_server.weather")
+            logger.warning("Weather API key not configured. Weather tool will return dummy data.")
     
     @property
     def parameters(self) -> Dict[str, Any]:
@@ -49,7 +55,29 @@ class WeatherTool(BaseTool):
         """
         location = location or self.default_location
         
-        # Use OpenWeatherMap API (you would need an API key)
+        # Check if we have a valid API key
+        if not self.api_key or self.api_key == "your-api-key-here":
+            # Return dummy data for testing
+            return {
+                "location": f"{location}, Demo",
+                "temperature": {
+                    "current": 22,
+                    "feels_like": 24,
+                    "min": 18,
+                    "max": 26,
+                    "unit": "°C" if units == "metric" else "°F"
+                },
+                "humidity": 65,
+                "wind": {
+                    "speed": 5.2,
+                    "unit": "m/s" if units == "metric" else "mph"
+                },
+                "conditions": "Clear",
+                "description": "clear sky (demo data)",
+                "timestamp": 1234567890
+            }
+        
+        # Use OpenWeatherMap API
         url = f"https://api.openweathermap.org/data/2.5/weather"
         params = {
             "q": location,

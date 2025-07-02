@@ -55,10 +55,7 @@ class CalculatorTool(BaseTool):
     
     def _safe_eval(self, expr: str) -> float:
         """
-        Safely evaluate a mathematical expression.
-        
-        This is a simplified implementation. A production version would use
-        a proper parsing library like sympy.
+        Safely evaluate a mathematical expression using sympy.
         
         Args:
             expr: Mathematical expression
@@ -66,9 +63,31 @@ class CalculatorTool(BaseTool):
         Returns:
             Calculated result
         """
-        # For demo purposes, we'll use a simplified approach
-        # WARNING: This is not secure for production use
-        
+        try:
+            # Try to import sympy for safer evaluation
+            import sympy as sp
+            
+            # Parse and evaluate the expression
+            result = sp.sympify(expr)
+            
+            # Convert to float if it's a number
+            if result.is_number:
+                return float(result.evalf())
+            else:
+                raise ValueError(f"Expression '{expr}' does not evaluate to a number")
+                
+        except ImportError:
+            # Fallback to manual evaluation if sympy not available
+            logger.warning("sympy not available, using fallback evaluation")
+            return self._fallback_eval(expr)
+        except Exception as e:
+            raise ValueError(f"Cannot evaluate expression '{expr}': {str(e)}")
+    
+    def _fallback_eval(self, expr: str) -> float:
+        """
+        Fallback evaluation method when sympy is not available.
+        WARNING: This uses eval() which is not secure for production.
+        """
         # Define safe functions and constants
         safe_dict = {
             'abs': abs,
@@ -84,6 +103,9 @@ class CalculatorTool(BaseTool):
             'sin': math.sin,
             'cos': math.cos,
             'tan': math.tan,
+            'asin': math.asin,
+            'acos': math.acos,
+            'atan': math.atan,
             'pi': math.pi,
             'e': math.e
         }
