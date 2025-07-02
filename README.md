@@ -16,6 +16,7 @@ MCP starter project with voice and chat functionality, featuring AI tool calling
 ### Required
 - **Ollama**: Download from [https://ollama.com/download](https://ollama.com/download)
 - **Docker**: Download from [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
+- **Weather API**: API key from [https://openweathermap.org/](https://openweathermap.org/)
 
 ## Setup Instructions
 
@@ -28,14 +29,18 @@ ollama pull qwq:32b
 # ollama pull llama3.2:latest
 ```
 
-### 2. Build and Run with Docker
+### 2. .env
+LLM_MODEL=qwq:32b
+WEATHER_API_KEY= "enter your Weather API key"
+
+### 3. Build and Run with Docker
 ```bash
 # In the MCP_Voice project directory
 docker build -t mcp-voice .
 docker run -d --name mcp-voice-new -p 8000:8000 mcp-voice
 ```
 
-### 3. Access the Interface
+### 4. Access the Interface
 - Open `index.html` in your browser, or
 - Navigate to `http://localhost:8000`
 
