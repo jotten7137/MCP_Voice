@@ -29,9 +29,11 @@ ollama pull qwq:32b
 # ollama pull llama3.2:latest
 ```
 
-### 2. .env
+### 2. Create .env
+```bash
 LLM_MODEL=qwq:32b
 WEATHER_API_KEY= "enter your Weather API key"
+```
 
 ### 3. Build and Run with Docker
 ```bash
