@@ -5,11 +5,11 @@ MCP starter - voice and chat functionality with MCP boiler-plate potential
 MCP starter project with voice and chat functionality, featuring AI tool calling capabilities. Includes weather queries, mathematical calculations, and voice responses.
 
 ## Features
-- 🎤 Voice input and audio responses
-- 💬 Text chat interface
-- 🔧 Tool calling (weather, calculator)
-- 🤖 Multiple AI model support via Ollama
-- 🐳 Docker containerization
+- Voice input and audio responses
+- Text chat interface
+- Tool calling (weather, calculator)
+- Multiple AI model support via Ollama
+- Docker containerization
 
 ## Dependencies
 
